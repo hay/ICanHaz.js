@@ -10,10 +10,10 @@
     var ich = {
         VERSION: "@VERSION@",
         templates: {},
-        
+
         // grab jquery or zepto if it's there
         $: (typeof window !== 'undefined') ? window.jQuery || window.Zepto || null : null,
-        
+
         // public function for adding templates
         // can take a name and template string arguments
         // or can take an object with name/template pairs
@@ -27,7 +27,7 @@
                 return;
             }
             if (ich[name]) {
-                console.error("Invalid name: " + name + "."); 
+                console.error("Invalid name: " + name + ".");
             } else if (ich.templates[name]) {
                 console.error("Template \"" + name + "  \" exists");
             } else {
@@ -39,7 +39,7 @@
                 };
             }
         },
-        
+
         // clears all retrieval functions and empties cache
         clearAll: function () {
             for (var key in ich.templates) {
@@ -47,21 +47,21 @@
             }
             ich.templates = {};
         },
-        
+
         // clears/grabs
         refresh: function () {
             ich.clearAll();
             ich.grabTemplates();
         },
-        
+
         // grabs templates from the DOM and caches them.
         // Loop through and add templates.
-        // Whitespace at beginning and end of all templates inside <script> tags will 
-        // be trimmed. If you want whitespace around a partial, add it in the parent, 
+        // Whitespace at beginning and end of all templates inside <script> tags will
+        // be trimmed. If you want whitespace around a partial, add it in the parent,
         // not the partial. Or do it explicitly using <br/> or &nbsp;
-        grabTemplates: function () {        
-            var i, 
-                scripts = document.getElementsByTagName('script'), 
+        grabTemplates: function () {
+            var i,
+                scripts = document.getElementsByTagName('script'),
                 script,
                 trash = [];
             for (i = 0, l = scripts.length; i < l; i++) {
@@ -76,15 +76,20 @@
             }
         }
     };
-    
-    // Use CommonJS if applicable
-    if (typeof require !== 'undefined') {
+
+    // Use AMD
+    if (typeof define !== 'undefined' && define.amd) {
+        define(function() {
+            return ich;
+        });
+    } else if (typeof require !== 'undefined') {
+        // Use CommonJS
         module.exports = ich;
     } else {
         // else attach it to the window
         window.ich = ich;
     }
-    
+
     if (typeof document !== 'undefined') {
         if (ich.$) {
             ich.$(function () {
@@ -96,5 +101,5 @@
             }, true);
         }
     }
-        
+
 })();
